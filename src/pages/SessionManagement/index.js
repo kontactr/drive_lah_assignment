@@ -17,8 +17,10 @@ import { withRouter } from 'react-router'
 class SessionManagement extends React.Component {
 
     state = {
+
         sessionFiles: [],
         addFileModalVisibility: false,
+        enablePreviousVersion: false,
     }
 
     openAddFileModal = () => {
@@ -45,8 +47,10 @@ class SessionManagement extends React.Component {
     }
 
     setDirectoryFiles = async (dirHandler) => {
+
         const { sessionStore } = this.props
         const { setDirectoryHandler } = sessionStore
+
         const files = await getFilesWithinDirectory(dirHandler);
         setDirectoryHandler(dirHandler);
         this.setState({ sessionFiles: files });
@@ -67,6 +71,7 @@ class SessionManagement extends React.Component {
     gotoLoginPage = () => {
         const { history, routes } = this.props
         const route = routes.login.generateRoute()
+        console.log(7444)
         history.push(route);
     }
 
@@ -74,7 +79,6 @@ class SessionManagement extends React.Component {
 
         const { sessionStore } = this.props
         const { setFileHandler } = sessionStore;
-        console.log(fileHandler);
         await setFileHandler(fileHandler);
         this.gotoLoginPage();
 
@@ -127,23 +131,46 @@ class SessionManagement extends React.Component {
         }
     }
 
+    onLoadPreviousVersion = async () => {
+        const { sessionStore } = this.props
+        const { retrivePersistHandlers,
+            setDirectoryHandler,
+            setFileHandler,
+        } = sessionStore
+
+        const response = await retrivePersistHandlers()
+        if (response) {
+            await setFileHandler(response.fileHandler)
+            await this.setDirectoryFiles(response.dirHandler)
+            await setDirectoryHandler(response.dirHandler)
+
+
+            this.gotoLoginPage();
+        } else {
+        }
+
+
+    }
+
 
     render() {
         const { sessionStore } = this.props
         const { dirHandler } = sessionStore
-        const { sessionFiles, addFileModalVisibility } = this.state
+        const { sessionFiles, addFileModalVisibility, enablePreviousVersion } = this.state
 
         const isSessionFilesPresent = sessionFiles.length > 0
 
+
         return <div>
             <div>
+                {enablePreviousVersion && <Button onClick={this.onLoadPreviousVersion}>Load Previous Version</Button>}
                 <Button onClick={this.onSelectWorkingDirectory}>Select Working Directory</Button>
             </div>
             {dirHandler ? <div>
                 <div>
                     <Divider>Quick Action</Divider>
                     <div>
-                        <Button>Load Previous Session</Button>
+                        {/* <Button>Load Previous Session</Button> */}
                         <Button onClick={this.openAddFileModal}>Add New Session</Button>
                     </div>
                 </div>
@@ -161,11 +188,27 @@ class SessionManagement extends React.Component {
         </div>
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { sessionStore } = this.props
-        const { dirHandler } = sessionStore
+        const { dirHandler, retrivePersistHandlers,
+            setIsPrevVersionPresent,
+            isPrevVersionPresent,
+        } = sessionStore
+
         if (dirHandler) {
-            this.setDirectoryFiles(dirHandler)
+            await this.setDirectoryFiles(dirHandler)
+            if (isPrevVersionPresent) {
+                this.setState({ enablePreviousVersion: true })
+            }
+        } else {
+            const response = await retrivePersistHandlers()
+            if (response) {
+                setIsPrevVersionPresent(true);
+                this.setState({ enablePreviousVersion: true })
+            } else {
+                setIsPrevVersionPresent(false);
+            }
+
         }
 
     }

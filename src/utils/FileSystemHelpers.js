@@ -18,6 +18,30 @@ export const verifyPermission = async (fileHandler, mode = "readwrite") => {
     return false;
 };
 
+export const verifyPermissionForDirectory = async (dirHandler, mode = "readwrite") => {
+
+    if (!dirHandler) return false;
+
+    const options = {};
+    options.mode = mode;
+    // Check if permission was already granted. If so, return true.
+    let result = (await dirHandler.queryPermission(options))
+
+    if (result === "granted") {
+        return true;
+    }
+
+
+    // Request permission. If the user grants permission, return true.
+    if ((await dirHandler.requestPermission(options)) === "granted") {
+        return true;
+    }
+
+
+    // The user didn't grant permission, so return false.
+    return false;
+};
+
 export const getFileNameWithExtension = (fileName) => {
     if (!fileName.endsWith(DEFAULT_FILE_EXTENSION)) {
         fileName = `${fileName}${DEFAULT_FILE_EXTENSION}`
@@ -50,6 +74,7 @@ export const getDirectoryHandler = async () => {
 export const getFilesWithinDirectory = async (dirHandler, filterByExtension = DEFAULT_FILE_EXTENSION) => {
     const files = [];
     if (dirHandler) {
+        await verifyPermissionForDirectory(dirHandler)
         for await (const file of dirHandler.values()) {
             if (!filterByExtension || file.name.endsWith(filterByExtension)) {
                 //file["uniqueId"] = generateId()
@@ -71,7 +96,7 @@ export const readFile = async (fileHandler) => {
 }
 
 export const writeFile = async (fileHandler, contents) => {
-    console.log(await verifyPermission(fileHandler, "readwrite"));
+    await verifyPermission(fileHandler, "readwrite")
     const writable = await fileHandler.createWritable();
     await writable.write(contents);
     await writable.close();

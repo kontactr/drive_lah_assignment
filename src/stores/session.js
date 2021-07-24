@@ -1,5 +1,10 @@
-import { readFile, writeFile } from 'utils/FileSystemHelpers'
+import {
+    DEFAULT_IDB_KEY_FOR_FILE_HANDLER,
+    DEFAULT_IDB_KEY_FOR_DIRECTORY_HANDLER
+} from 'config/constants'
+import { readFile, writeFile, } from 'utils/FileSystemHelpers'
 import { convertToCSV, convertToArray } from 'utils/CSVHelpers'
+import { getValues, setValue } from 'utils/IdbHelpers'
 import { makeAutoObservable } from 'mobx'
 
 export default class SessionStore {
@@ -8,15 +13,44 @@ export default class SessionStore {
     database = []
     currentUser = undefined;
 
+    isPrevVersionPresent = false;
+
+    setIsPrevVersionPresent = (value) => {
+        this.isPrevVersionPresent = value
+    }
 
 
+    getPersistHandlers = async () => {
+        const [fileHandler, dirHandler] = await getValues(
+            DEFAULT_IDB_KEY_FOR_FILE_HANDLER,
+            DEFAULT_IDB_KEY_FOR_DIRECTORY_HANDLER
+        )
+        if (fileHandler && dirHandler) {
+            return { fileHandler, dirHandler }
+        }
+        return undefined;
+    }
+
+    retrivePersistHandlers = async () => {
+        try {
+            const response = await this.getPersistHandlers()
+            //return undefined;
+            return response;
+        } catch (err) {
+            return undefined;
+        }
+    }
 
     constructor() {
         makeAutoObservable(this)
+        this.retrivePersistHandlers()
     }
 
-    setDirectoryHandler = (dirHandler) => {
+    setDirectoryHandler = (dirHandler, persist = true) => {
         this.dirHandler = dirHandler;
+        if (persist) {
+            setValue(DEFAULT_IDB_KEY_FOR_DIRECTORY_HANDLER, dirHandler)
+        }
     }
 
     configureDatabase = async (fileHandler) => {
@@ -24,7 +58,6 @@ export default class SessionStore {
 
         if (contents && contents.length) {
             const jsData = convertToArray(contents)
-            console.log(jsData, 233333)
             this.setDatabase(jsData)
         } else {
             this.setDatabase([])
@@ -37,13 +70,15 @@ export default class SessionStore {
         return contents;
     }
 
-    setFileHandler = async (fileHandler) => {
+    setFileHandler = async (fileHandler, persist = true) => {
         await this.configureDatabase(fileHandler);
         this.fileHandler = fileHandler;
+        if (persist) {
+            setValue(DEFAULT_IDB_KEY_FOR_FILE_HANDLER, fileHandler)
+        }
     }
 
     setDatabase = (databse = []) => {
-        console.log(databse);
         if (Array.isArray(databse)) {
             this.database = databse;
         }
@@ -88,9 +123,8 @@ export default class SessionStore {
     addNewUser = async ({ phone, name = "" }) => {
         const newUser = { phone, name }
         const newDatabase = [...this.database, newUser]
-        const contents = await this.writeToFile(newDatabase);
+        await this.writeToFile(newDatabase);
         this.setDatabase(newDatabase);
-        console.log(contents, 60000)
         return newUser;
     }
 

@@ -32,7 +32,6 @@ export const convertToCSV = (data = null, columnDelimiter = ",", lineDelimiter =
 export const convertToArray = (arr) => {
     let jsonObj = [];
     arr = arr.split("\n").filter(Boolean);
-    console.log(arr, 35555)
     let headers = arr[0].split(',');
     for (let i = 1; i < arr.length; i++) {
         let data = arr[i].split(',');

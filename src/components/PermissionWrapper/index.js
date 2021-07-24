@@ -8,10 +8,10 @@ class PermissionWrapper extends React.Component {
     render() {
         const { routes } = this.props;
         const { sessionStore } = this.props;
-        const { fileHandler, currentUser } = sessionStore;
+        const { fileHandler, dirHandler, currentUser } = sessionStore;
         const { children, publicRoute, databasePublic } = this.props;
 
-        if (fileHandler) {
+        if (fileHandler && dirHandler) {
 
             if (currentUser) {
                 if (!publicRoute) {
