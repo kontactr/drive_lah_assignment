@@ -30,6 +30,21 @@ const Login = (props) => {
 
     const history = useHistory()
 
+    const onChangeDatabaseClick = () => {
+        const { routes } = props
+        const route = routes.sessionManagement.generateRoute()
+        history.push(route)
+    }
+
+    const gotoDashboard = () => {
+        const { routes } = props
+        const route = routes.dashboard.generateRoute()
+        history.push(route)
+    }
+
+    const onGoBack = () => {
+        setStage(STAGES.INIT)
+    }
 
     const onGetOtpClick = () => {
         const newOtp = generateOTP();
@@ -54,15 +69,14 @@ const Login = (props) => {
         onGetOtpClick();
     }
 
-    const onOtpStageComplete = (values) => {
-        const { checkIfUserExist, addNewUser } = sessionStore
-        const ifUserExist = checkIfUserExist(phone);
-        if (ifUserExist) {
-            alert("YES, I'M ALREADY EXISTED")
-        } else {
-            console.log("HEREEEE")
-            addNewUser({ phone, name: "" })
+    const onOtpStageComplete = async (values) => {
+        const { checkIfUserExist, setCurrentUser, addNewUser } = sessionStore
+        let user = checkIfUserExist(phone);
+        if (!Boolean(user)) {
+            user = await addNewUser({ phone, name: "" })
         }
+        setCurrentUser(user);
+        gotoDashboard();
 
     }
 
@@ -75,16 +89,6 @@ const Login = (props) => {
         } else {
             // no op
         }
-    }
-
-    const onGoBack = () => {
-        setStage(STAGES.INIT)
-    }
-
-    const onChangeDatabaseClick = () => {
-        const { routes } = props
-        const route = routes.sessionManagement.generateRoute()
-        history.push(route)
     }
 
     return (

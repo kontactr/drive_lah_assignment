@@ -1,20 +1,31 @@
 import React from 'react';
-import './PermissionWrapper.css'
+import { scrollToTop } from 'utils/DomHelpers'
 import { inject, observer } from 'mobx-react';
 import { Redirect } from 'react-router-dom'
+import './PermissionWrapper.css'
 
 class PermissionWrapper extends React.Component {
     render() {
         const { routes } = this.props;
         const { sessionStore } = this.props;
-        const { fileHandler } = sessionStore;
+        const { fileHandler, currentUser } = sessionStore;
         const { children, publicRoute, databasePublic } = this.props;
 
         if (fileHandler) {
-            if (publicRoute) {
-                return children;
+
+            if (currentUser) {
+                if (!publicRoute) {
+                    return children;
+                } else {
+                    return <Redirect to={routes.dashboard.generateRoute()}></Redirect>
+                }
             } else {
-                return <Redirect to={routes.login.generateRoute()}></Redirect>
+                if (publicRoute) {
+                    return children;
+                } else {
+                    return <Redirect to={routes.login.generateRoute()}></Redirect>
+                }
+
             }
 
         } else {
@@ -24,7 +35,10 @@ class PermissionWrapper extends React.Component {
                 return <Redirect to={routes.sessionManagement.generateRoute()} ></Redirect>
             }
         }
+    }
 
+    componentDidMount() {
+        scrollToTop()
     }
 }
 

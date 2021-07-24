@@ -11,19 +11,19 @@ const routes = {
         }
     },
     login: {
-        path: "/login",
+        path: "/",
         publicRoute: true,
         databasePublic: false,
         component: React.lazy(() => import('pages/Login')),
         generateRoute: () => {
-            return "/login"
+            return "/"
         }
     },
     dashboard: {
         path: "/dashboard",
         publicRoute: false,
         databasePublic: false,
-        component: React.lazy(() => import('pages/Login')),
+        component: React.lazy(() => import('pages/Dashboard')),
         generateRoute: () => {
             return "/dashboard"
         }

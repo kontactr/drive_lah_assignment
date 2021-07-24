@@ -15,7 +15,7 @@ configure({
   useProxies: "ifavailable",
   enforceActions: "always",
   reactionRequiresObservable: true,
-  observableRequiresReaction: true,
+  // observableRequiresReaction: true,
 })
 
 
