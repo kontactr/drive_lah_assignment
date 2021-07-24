@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { configure } from 'mobx'
 import { Provider } from 'mobx-react'
-import App from 'components/App';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import SessionManageMent from 'pages/SessionManagement';
+import Login from 'pages/Login'
 import store from 'stores'
 import 'antd/dist/antd.css';
 import './index.css';
@@ -15,11 +17,29 @@ configure({
 })
 
 
+const generateReactRouter = () => {
+  return <Router>
+    <Switch>
+      <Route path="/session-management">
+        <SessionManageMent />
+      </Route>
+      <Route path="/">
+        <Login />
+      </Route>
+      <Route path="/dashboard">
+        <SessionManageMent />
+      </Route>
+
+    </Switch>
+  </Router>
+}
+
+
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider {...store}>
-    <App />
+      {generateReactRouter()}
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

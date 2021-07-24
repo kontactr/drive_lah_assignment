@@ -1,0 +1,10 @@
+.file-list {
+  width: 90%;
+  margin-left: 100px !important;
+}
+
+.file-item:hover {
+  outline: 1px lightblue solid;
+  transform: scale(1.01);
+  cursor: pointer;
+}
