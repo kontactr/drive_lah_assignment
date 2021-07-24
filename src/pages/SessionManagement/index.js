@@ -44,15 +44,20 @@ class SessionManagement extends React.Component {
         }
     }
 
-    onSelectWorkingDirectory = async () => {
+    setDirectoryFiles = async (dirHandler) => {
         const { sessionStore } = this.props
         const { setDirectoryHandler } = sessionStore
+        const files = await getFilesWithinDirectory(dirHandler);
+        setDirectoryHandler(dirHandler);
+        this.setState({ sessionFiles: files });
+
+    }
+
+    onSelectWorkingDirectory = async () => {
         try {
             const dirHandler = await getDirectoryHandler();
             if (dirHandler) {
-                const files = await getFilesWithinDirectory(dirHandler);
-                setDirectoryHandler(dirHandler);
-                this.setState({ sessionFiles: files });
+                this.setDirectoryFiles(dirHandler)
             }
         } catch (err) {
 
@@ -154,6 +159,15 @@ class SessionManagement extends React.Component {
                 onFormSubmit={this.onNewSessionFileAdd}
                 onFileNameValidation={this.checkIfFileIsPresent} />
         </div>
+    }
+
+    componentDidMount() {
+        const { sessionStore } = this.props
+        const { dirHandler } = sessionStore
+        if (dirHandler) {
+            this.setDirectoryFiles(dirHandler)
+        }
+
     }
 
 }
