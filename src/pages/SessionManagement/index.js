@@ -60,8 +60,9 @@ class SessionManagement extends React.Component {
     }
 
     gotoLoginPage = () => {
-        const { history } = this.props
-        history.push("/");
+        const { history, routes } = this.props
+        const route = routes.login.generateRoute()
+        history.push(route);
     }
 
     onSessionFileSelect = async (fileHandler) => {

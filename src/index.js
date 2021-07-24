@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { configure } from 'mobx'
 import { Provider } from 'mobx-react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import SessionManageMent from 'pages/SessionManagement';
-import Login from 'pages/Login'
+import PermissionWrapper from 'components/PermissionWrapper'
+//import SessionManageMent from 'pages/SessionManagement';
+//import Login from 'pages/Login'
 import store from 'stores'
+import routes from 'config/routes'
 import 'antd/dist/antd.css';
 import './index.css';
 
@@ -18,18 +20,19 @@ configure({
 
 
 const generateReactRouter = () => {
+  const allRoutes = Object.keys(routes)
   return <Router>
     <Switch>
-      <Route path="/session-management">
-        <SessionManageMent />
-      </Route>
-      <Route path="/">
-        <Login />
-      </Route>
-      <Route path="/dashboard">
-        <SessionManageMent />
-      </Route>
-
+      {allRoutes.map((route) => {
+        const { path } = routes[route]
+        const Component = routes[route].component
+        return <Route exact path={path} key={path} render={(props) => {
+          return (<PermissionWrapper {...routes[route]} routes={routes} >
+            <Component {...props} routes={routes}></Component>
+          </PermissionWrapper>)
+        }}>
+        </Route>
+      })}
     </Switch>
   </Router>
 }
@@ -38,10 +41,12 @@ const generateReactRouter = () => {
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider {...store}>
-      {generateReactRouter()}
-    </Provider>
-  </React.StrictMode>,
+    <Suspense fallback={<div>Loading.....</div>}>
+      <Provider {...store}>
+        {generateReactRouter()}
+      </Provider>
+    </Suspense>
+  </React.StrictMode >,
   document.getElementById('root')
 );
 

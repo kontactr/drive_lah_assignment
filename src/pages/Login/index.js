@@ -82,7 +82,9 @@ const Login = (props) => {
     }
 
     const onChangeDatabaseClick = () => {
-        history.push("/session-management")
+        const { routes } = props
+        const route = routes.sessionManagement.generateRoute()
+        history.push(route)
     }
 
     return (
