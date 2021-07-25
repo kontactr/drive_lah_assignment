@@ -1,0 +1,27 @@
+.add-name-form-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-name-fg-divider {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.add-name-form {
+  min-width: 200px;
+  max-width: 500px;
+}
+
+.add-name-form-buttons-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-name-form-submit-button {
+  margin-top: 20px;
+}

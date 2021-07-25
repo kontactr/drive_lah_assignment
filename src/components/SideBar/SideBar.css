@@ -1,0 +1,42 @@
+.dashboard-sider {
+  min-height: max(100vh, 280px);
+}
+
+.app-logo {
+  color: white;
+  font-size: 50px;
+}
+
+.app-logo-container {
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sider-menu-item {
+  cursor: pointer;
+  background: #001529;
+  height: 50px;
+  color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sider-menu-item:hover {
+  background: #1890ff;
+  height: 50px;
+  color: white;
+}
+
+.sider-menu-item-logo {
+  margin-top: 5px;
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.sider-menu-item-text {
+  font-size: 1.5em;
+  word-spacing: 50px;
+}

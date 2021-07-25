@@ -1,7 +1,8 @@
 import React from 'react'
 import { inject, observer } from 'mobx-react'
-import { Button, Divider } from 'antd'
+import { Button, Divider, Modal } from 'antd'
 import FileList from 'components/FileList'
+import EmptyWrapper from 'components/EmptyWrapper'
 import AddFileModal from 'components/AddFileModal'
 import {
     getDirectoryHandler,
@@ -13,6 +14,7 @@ import {
 } from 'utils/FileSystemHelpers'
 import './SessionManagement.css'
 import { withRouter } from 'react-router'
+import { DEFAULT_FILE_EXTENSION } from 'config/constants'
 
 class SessionManagement extends React.Component {
 
@@ -122,13 +124,23 @@ class SessionManagement extends React.Component {
         }
     }
 
-    onDeleteSessionFile = async (file) => {
-        const { sessionStore } = this.props
-        const { dirHandler } = sessionStore
-        const result = await deleteFileWithInDirectory(dirHandler, file.name)
-        if (result) {
-            this.deleteSessionfile(file);
+    onDeleteSessionFile = (file) => {
+        const conig = {
+            title: 'Delete Session File',
+            content: <div>Are you sure, you want to delete <span className="delete-modal-file-name">{file.name}</span> file ?</div>
         }
+        Modal.confirm({
+            ...conig,
+            onOk: async () => {
+                const { sessionStore } = this.props
+                const { dirHandler } = sessionStore
+                const result = await deleteFileWithInDirectory(dirHandler, file.name)
+                if (result) {
+                    this.deleteSessionfile(file);
+                }
+                return result;
+            }
+        })
     }
 
     onLoadPreviousVersion = async () => {
@@ -148,10 +160,7 @@ class SessionManagement extends React.Component {
             this.gotoLoginPage();
         } else {
         }
-
-
     }
-
 
     render() {
         const { sessionStore } = this.props
@@ -161,26 +170,39 @@ class SessionManagement extends React.Component {
         const isSessionFilesPresent = sessionFiles.length > 0
 
 
-        return <div>
-            <div>
-                {enablePreviousVersion && <Button onClick={this.onLoadPreviousVersion}>Load Previous Version</Button>}
-                <Button onClick={this.onSelectWorkingDirectory}>Select Working Directory</Button>
+        return <div className="session-management-container">
+            <div className="session-root-config-options">
+                <Button type="primary" onClick={this.onSelectWorkingDirectory}>Select Working Directory</Button>
+                {enablePreviousVersion && <Button className="session-previous-version-button" onClick={this.onLoadPreviousVersion}>Load Previous Session</Button>}
             </div>
-            {dirHandler ? <div>
-                <div>
-                    <Divider>Quick Action</Divider>
+            <div className="session-working-directory-container">
+                {dirHandler ? <div className="session-directory-data-container">
                     <div>
-                        {/* <Button>Load Previous Session</Button> */}
-                        <Button onClick={this.openAddFileModal}>Add New Session</Button>
+                        <Divider>Quick Action</Divider>
+                        <div className="session-quick-action-container">
+                            <div className="session-directory-name-container">Your Current Working Directory is :
+                                <span className="session-directory-name">
+                                    {` ${dirHandler.name} `}
+                                </span>
+                            </div>
+                            {/* <Button>Load Previous Session</Button> */}
+                            <Button type="dashed" onClick={this.openAddFileModal}>Add New Session</Button>
+                        </div>
                     </div>
-                </div>
-                {isSessionFilesPresent ? <div>
-                    <Divider>Select Session</Divider>
-                    <div>
-                        <FileList files={sessionFiles} onDelete={this.onDeleteSessionFile} onSessionSelect={this.onSessionFileSelect} />
-                    </div>
-                </div> : null}
-            </div> : <>Please Select Working Directory</>}
+                    {isSessionFilesPresent ? <div>
+                        <Divider>Select Session</Divider>
+                        <div>
+                            <FileList files={sessionFiles} onDelete={this.onDeleteSessionFile} onSessionSelect={this.onSessionFileSelect} />
+                        </div>
+                    </div> :
+                        <div className="empty-container-data">
+                            <EmptyWrapper description={(
+                                <div>No Session Files ({DEFAULT_FILE_EXTENSION}) Found!</div>
+                            )}></EmptyWrapper>
+                        </div>
+                    }
+                </div> : <div className="empty-container-data"> <EmptyWrapper description={(<div>Please Select Your Working Directory!</div>)} /> </div>}
+            </div>
             <AddFileModal visible={addFileModalVisibility}
                 onCancel={this.closeAddFileModal}
                 onFormSubmit={this.onNewSessionFileAdd}
@@ -216,3 +238,5 @@ class SessionManagement extends React.Component {
 }
 
 export default withRouter(inject('sessionStore')(observer(SessionManagement)))
+
+// <div>Please Select Working Directory</div>

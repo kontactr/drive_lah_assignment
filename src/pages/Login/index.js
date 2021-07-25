@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { Form, Modal, Input, Button, Divider, Tooltip } from 'antd'
+import { Form, Modal, Input, Button, Tooltip, Card } from 'antd'
 import { useHistory } from 'react-router-dom'
-import { DatabaseOutlined } from '@ant-design/icons'
+import { DatabaseOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { generateOTP } from 'utils/Helpers'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
@@ -92,70 +92,74 @@ const Login = (props) => {
     }
 
     return (
-        <div style={{
-            marginTop: "250px",
-            marginLeft: "700px",
-            width: "500px"
-        }}>
-            <div>
-                <div>{sessionName}</div>
-                <Tooltip color="blue" title="Change Database">
-                    <DatabaseOutlined style={{ cursor: "pointer" }} onClick={onChangeDatabaseClick} />
-                </Tooltip>
-            </div>
+        <div className="site-card-border-less-wrapper">
+            <div className="card-container">
+                <Card title={
+                    <div className="card-title-container">
+                        <div className="card-title-name">{sessionName}</div>
+                        <Tooltip color="blue" title="Change Session">
+                            <DatabaseOutlined className="card-title-database-icon-container" onClick={onChangeDatabaseClick} />
+                        </Tooltip>
+                    </div>
+                }>
 
-            <Divider type="horizontal"  ></Divider>
-            <Form
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 12 }}
-                initialValues={{ phone }}
-                onFinish={formFinish}
-            >
-                {(STAGES.INIT === stage) && (<Form.Item
-                    label="Phone Number"
-                    name="phone"
-                    rules={[{ required: true, message: 'Please input your phonenumber!', whitespace: true, }]}
-                >
-                    <PhoneInput
-                        country={config.DEFAULT_COUNTRY}
-                    />
-                </Form.Item>)}
 
-                {(STAGES.OTP === stage) && (
-                    <>
-                        <Form.Item
-                            label="Otp"
-                            name="otp"
-                            validateFirst
-                            rules={[{ required: true, message: 'Please input your otp!', whitespace: true, }, {
-                                validateTrigger: "onSubmit",
-                                validator: (_, value) => {
-                                    if (generatedOtp && value === generatedOtp) {
-                                        return Promise.resolve()
-                                    }
-                                    return Promise.reject("Please enter valid otp!")
-                                }
-                            }]}
+                    <Form
+                        initialValues={{ phone }}
+                        onFinish={formFinish}
+                    >
+                        {(STAGES.INIT === stage) && (<Form.Item
+                            label="Phone Number"
+                            name="phone"
+                            rules={[{ required: true, message: 'Please input your phonenumber!', whitespace: true, }]}
                         >
-                            <Input.Password />
-                        </Form.Item>
+                            <PhoneInput
+                                country={config.DEFAULT_COUNTRY}
+                                inputClass="login-phone-input"
+                                enableSearch
 
-                        <Button type="primary" onClick={onGetOtpClick}>
-                            Regenerate OTP
-                        </Button>
-                        <Button type="primary" onClick={onGoBack}>
-                            Go Back
-                        </Button>
-                    </>)
-                }
+                            />
+                        </Form.Item>)}
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
-                        {stage === STAGES.OTP ? "Submit" : "Next"}
-                    </Button>
-                </Form.Item>
-            </Form>
-        </div>
+                        {(STAGES.OTP === stage) && (
+                            <div className="row-otp-container">
+                                <Form.Item
+                                    label="OTP"
+                                    name="otp"
+                                    validateFirst
+                                    rules={[{ required: true, message: 'Please input your otp!', whitespace: true, }, {
+                                        validateTrigger: "onSubmit",
+                                        validator: (_, value) => {
+                                            if (generatedOtp && value === generatedOtp) {
+                                                return Promise.resolve()
+                                            }
+                                            return Promise.reject("Please enter valid otp!")
+                                        }
+                                    }]}
+                                >
+                                    <Input.Password className="login-input-element" />
+                                </Form.Item>
+
+                                <Button type="default" className="regenerate-otp-button" onClick={onGetOtpClick}>
+                                    Regenerate OTP
+                        </Button>
+
+
+                            </div>)
+                        }
+
+                        <div className="form-stage-buttons-container">
+                            {(STAGES.OTP === stage) && <ArrowLeftOutlined className="form-stage-button-back-icon-container" onClick={onGoBack} />}
+                            <Form.Item>
+                                <Button type="primary" htmlType="submit" className="next-step-button">
+                                    {stage === STAGES.OTP ? "Submit" : "Next"}
+                                </Button>
+                            </Form.Item>
+                        </div>
+                    </Form>
+                </Card >
+            </div>
+        </div >
     )
 }
 

@@ -1,0 +1,20 @@
+.form-file-name-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.form-item-file-name {
+  width: 90%;
+}
+
+.form-file-name-info-circle {
+  display: flex;
+  margin-left: 15px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.form-remember-current-session-container .ant-form-item-control-input-content {
+  display: flex;
+  justify-content: center;
+}

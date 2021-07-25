@@ -5,7 +5,7 @@ import {
 import { readFile, writeFile, } from 'utils/FileSystemHelpers'
 import { convertToCSV, convertToArray } from 'utils/CSVHelpers'
 import { getValues, setValue } from 'utils/IdbHelpers'
-import { makeAutoObservable } from 'mobx'
+import { makeAutoObservable, toJS } from 'mobx'
 
 export default class SessionStore {
     dirHandler = undefined;
@@ -90,6 +90,7 @@ export default class SessionStore {
         } else {
             this.currentUser = { ...this.currentUser, ...user }
         }
+        console.log(toJS(this.currentUser), 9333)
     }
 
     updateUser = async (phone, updateData) => {

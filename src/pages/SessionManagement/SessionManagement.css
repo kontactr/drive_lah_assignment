@@ -1,0 +1,68 @@
+.session-management-container {
+  width: 90%;
+  margin: auto;
+}
+
+.session-root-config-options {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.session-previous-version-button {
+  margin-left: 25px;
+}
+
+.session-working-directory-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty-container-data {
+  height: 70vh;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+}
+
+.empty-container-data div {
+  margin: auto;
+}
+
+.session-directory-data-container {
+  width: 100%;
+}
+
+.session-quick-action-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.session-directory-name-container {
+  flex-wrap: wrap;
+}
+
+.session-directory-name,
+.delete-modal-file-name {
+  font-weight: 600;
+  font-size: 1em;
+}
+
+@media screen and (min-width: 700px) {
+  .session-management-container {
+    width: 93%;
+    margin: auto;
+  }
+}
+
+@media screen and (max-width: 439px) {
+  .session-previous-version-button {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 0px;
+  }
+}

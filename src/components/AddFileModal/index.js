@@ -1,7 +1,7 @@
 import { Modal, Button, Form, Input, Checkbox, Tooltip } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import './AddFileModal.css'
-import { DEFAULT_FILE_PATTERN } from 'config/constants'
+import { DEFAULT_FILE_EXTENSION, DEFAULT_FILE_PATTERN } from 'config/constants'
 
 const config = {
     title: "Create Session File",
@@ -12,6 +12,7 @@ const AddFileModal = (props) => {
     const { visible = false, onCancel = () => { }, onFormSubmit = () => { }, onFileNameValidation = () => { } } = props
 
     return < Modal visible={visible}
+        maskClosable={false}
         title={config.title}
         onCancel={onCancel}
         destroyOnClose={true}
@@ -21,41 +22,44 @@ const AddFileModal = (props) => {
         ]}>
         <Form
             name={config.id}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 12 }}
             initialValues={{ rememberAsCurrentSession: false }}
             onFinish={(values) => { onFormSubmit(values); onCancel(); }}
         >
-            <Form.Item
-                label="File Name"
-                name="fileName"
-                hasFeedback
-                validateFirst
-                rules={[
-                    { required: true, message: 'Please input file name!', whitespace: true },
-                    {
-                        pattern: DEFAULT_FILE_PATTERN, message: '[0-9a-zA-Z_-. ]!'
-                    }, {
-                        validateTrigger: "onSubmit",
-                        validator: (_, fileName) => {
-                            const error = onFileNameValidation(fileName);
-                            if (error) {
-                                return Promise.reject(error.toString());
-                            }
-                            return Promise.resolve();
+            <div className="form-file-name-container">
+                <Form.Item
+                    className="form-item-file-name"
+                    label={<div className="form-item-file-name-label">File Name</div>}
+                    name="fileName"
+                    hasFeedback
+                    validateFirst
+                    rules={[
+                        { required: true, message: 'Please input file name!', whitespace: true },
+                        {
+                            pattern: DEFAULT_FILE_PATTERN, message: '[0-9a-zA-Z_-. ]!'
+                        }, {
+                            validateTrigger: "onSubmit",
+                            validator: (_, fileName) => {
+                                const error = onFileNameValidation(fileName);
+                                if (error) {
+                                    return Promise.reject(error.toString());
+                                }
+                                return Promise.resolve();
 
-                        },
-                    }]}
-            >
-                <Input />
-            </Form.Item>
-            <Tooltip title="Our extension is .txt and it is automatically added" color={"blue"} key={"blue"}>
-                <InfoCircleOutlined />
-            </Tooltip>
+                            },
+                        }]}
+                >
+                    <Input />
+                </Form.Item>
+                <Tooltip title={`Our extension is ${DEFAULT_FILE_EXTENSION}  and it will be automatically added`} color={"blue"} key={"blue"}>
+                    <InfoCircleOutlined className="form-file-name-info-circle" />
+                </Tooltip>
+            </div>
 
-            <Form.Item name="rememberAsCurrentSession" valuePropName="checked" wrapperCol={{ offset: 4, span: 16 }}>
-                <Checkbox>consider as a current session</Checkbox>
-            </Form.Item>
+            <div className="form-remember-current-session-container">
+                <Form.Item name="rememberAsCurrentSession" valuePropName="checked">
+                    <Checkbox >consider as a current session</Checkbox>
+                </Form.Item>
+            </div>
         </Form>
 
     </Modal >

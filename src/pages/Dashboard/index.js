@@ -1,18 +1,14 @@
-import { Button, Divider } from "antd";
-import AddName from 'components/AddName'
-import { useHistory } from 'react-router-dom'
 import { inject, observer } from "mobx-react"
+import Template from 'components/Template'
+import AddName from 'components/AddName'
+import DisaplyUser from 'components/DisplayUser'
 import "./Dashboard.css"
 
 const Dashboard = (props) => {
-    const history = useHistory()
-    const { sessionStore, routes } = props;
-    const { currentUser, setCurrentUser, updateUser, resetUser } = sessionStore
-
-
+    const { sessionStore } = props;
+    const { currentUser, setCurrentUser, updateUser } = sessionStore
     const userPhone = currentUser ? currentUser.phone : ""
     const userName = currentUser ? currentUser.name : ""
-
 
     const onNameAdd = async (values) => {
         const { userName } = values;
@@ -20,19 +16,15 @@ const Dashboard = (props) => {
         userPhone && (await updateUser(userPhone, updateData))
         setCurrentUser(updateData)
     }
-
-    const onLogout = () => {
-        resetUser()
-        history.push(routes.login.generateRoute())
-    }
-
-    return <div>
-        <Divider>Dashboard</Divider>
-        <div>{`Hello, ${userName || 'User'}`}</div>
-        {!userName && <AddName onFinish={onNameAdd} />}
-        <Button onClick={onLogout}>Logout</Button>
-
-    </div>
+    return <Template >
+        {
+            userName ? (
+                <DisaplyUser name={userName} />
+            ) : (
+                <AddName onFinish={onNameAdd}></AddName>
+            )
+        }
+    </Template>
 }
 
 export default inject('sessionStore')(observer(Dashboard))

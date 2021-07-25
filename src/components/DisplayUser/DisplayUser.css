@@ -1,0 +1,10 @@
+.user-display-container {
+  width: 100%;
+  height: 100%;
+  font-size: 3em;
+  text-transform: capitalize;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}

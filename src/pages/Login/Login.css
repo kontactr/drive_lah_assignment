@@ -1,0 +1,74 @@
+.site-card-border-less-wrapper {
+  width: 100vw;
+  height: 100vh;
+  background: #ececec;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+.card-container {
+  width: auto;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row-otp-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
+
+.regenerate-otp-button {
+  margin-left: 20px;
+  width: 150px;
+}
+
+.card-title-database-icon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-stage-button-back-icon-container {
+  margin-top: 11px;
+  font-size: 1.2em;
+  margin-right: auto;
+}
+
+.form-stage-buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.login-input-element {
+  min-width: 250px;
+}
+
+.next-step-button {
+  justify-self: flex-end;
+}
+
+@media screen and (max-width: 575px) {
+  .row-otp-container {
+    width: 200px;
+    flex-wrap: wrap;
+    margin-bottom: 27px;
+  }
+
+  .login-input-element {
+    min-width: 80%;
+  }
+
+  .form-control {
+    width: 100% !important;
+  }
+}
