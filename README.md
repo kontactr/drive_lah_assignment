@@ -1,10 +1,17 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/fcb8e9ac-9b31-4fb0-a1ef-b9d63088564e/deploy-status)](https://app.netlify.com/sites/yg-drivelah-assignment/deploys)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+In this project users can login using their phone number set their names. The main focus of this project to persist data using filesystems. In this project users can select various files as their session database and ,then, they can use functionalities.
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `yarn` or `yarn install`
+
+This command installs all the required dependencies to run this project.
 
 ### `yarn start`
 
@@ -13,11 +20,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `yarn build`
 
@@ -29,42 +31,33 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+### `Deployment`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This project is hosted on Netlify's environment with the build pipeline of the main branch. \
+You can visit [here](https://yg-drivelah-assignment.netlify.app/)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### `How To`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Users have to first select directory which works as a working directory for them.
+- After that, they can create session file (Database) or view those files below it.
+- Select any one of them or check `consider as a current session` for quick action.
+- Users can also select their previous session for quick action (if available)
+- Then, they will be navigated to login page
+- Enter phone number & OTP for login
+- if user is already present, they will see their names on the dashboard
+- otherwise, they will be prompted a form where they have to fill up their name and save, then, they can see their names.
+- Users can logout using sidebar
+- Users can also change their session (Database) by clicking on database icon on the login page.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### `Third-Party packages`
 
-## Learn More
+- [antd](https://www.npmjs.com/package/antd) & [antd-icons](https://www.npmjs.com/package/@ant-design/icons) - For UI design & icons.
+- [mobx](https://www.npmjs.com/package/mobx) & [mobx-react](https://www.npmjs.com/package/mobx-react) - For state management.
+- [prop-types](https://www.npmjs.com/package/prop-types) - For props checking.
+- [react-phone-input-2](https://www.npmjs.com/package/react-phone-input-2) - For phone input (number & country code).
+- [react-router-dom](https://www.npmjs.com/package/react-router-dom) - For routes.
+- [uniqid](https://www.npmjs.com/package/uniqid) - For the generation of unique ids.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### `Articles For References`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Filesystem](https://web.dev/file-system-access/) - for how to access filesystems
