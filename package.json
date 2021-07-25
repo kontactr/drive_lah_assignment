@@ -11,6 +11,7 @@
     "idb-keyval": "^5.0.6",
     "mobx": "^6.3.2",
     "mobx-react": "^7.2.0",
+    "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-phone-input-2": "^2.14.0",

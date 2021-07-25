@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Modal, Button, Form, Input, Checkbox, Tooltip } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import './AddFileModal.css'
@@ -64,6 +65,13 @@ const AddFileModal = (props) => {
 
     </Modal >
 
+}
+
+AddFileModal.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    onCancel: PropTypes.func,
+    onFormSubmit: PropTypes.func,
+    onFileNameValidation: PropTypes.func
 }
 
 export default AddFileModal;

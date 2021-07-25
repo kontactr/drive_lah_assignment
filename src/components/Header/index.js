@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Layout } from "antd";
 import {
     MenuUnfoldOutlined,
@@ -19,5 +20,11 @@ const HeaderComponent = (props) => {
         {collapsed ? <MenuUnfoldOutlined {...triggerMenuProps} /> : <MenuFoldOutlined {...triggerMenuProps} />}
     </Header>)
 }
+
+HeaderComponent.propTypes = {
+    collapsed: PropTypes.bool,
+    onClick: PropTypes.func
+}
+
 
 export default HeaderComponent;

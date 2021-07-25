@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Form, Input, Button, Divider, Card } from 'antd'
 import { DEAFULT_NAME_PATTERN, PLACEHOLDERS, VALIDATION_MESSAGES } from 'config/constants'
 import './AddName.css'
@@ -45,6 +46,10 @@ const AddName = (props) => {
             </Card>
         </div>
     </div >
+}
+
+AddName.propTypes = {
+    onFinish: PropTypes.func
 }
 
 export default AddName;

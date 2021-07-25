@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Layout } from "antd";
 import {
     UserOutlined,
@@ -24,6 +25,11 @@ const SideBar = (props) => {
         </div>
 
     </Sider>)
+}
+
+SideBar.propTypes = {
+    collapsed: PropTypes.bool,
+    onLogout: PropTypes.func
 }
 
 export default SideBar;

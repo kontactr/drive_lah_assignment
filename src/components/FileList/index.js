@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Button, List } from 'antd'
 import './FileList.css'
 import Avatar from 'antd/lib/avatar/avatar';
@@ -7,20 +8,6 @@ import Avatar from 'antd/lib/avatar/avatar';
 const fileListConfig = {
     itemLayout: "horizontal",
 }
-
-// const generateDataSource = (files) => {
-//     if (!Array.isArray(files)) {
-//         return []
-//     }
-//     return files.map((file) => {
-//         return {
-//             ...file,
-//             key: file.id,
-//             title: file.name
-//         }
-//     })
-// }
-
 
 const FileList = (props) => {
     const { files, onDelete, onSessionSelect } = props
@@ -57,6 +44,12 @@ const FileList = (props) => {
 
         />
     )
+}
+
+FileList.propTypes = {
+    files: PropTypes.array,
+    onDelete: PropTypes.func,
+    onSessionSelect: PropTypes.func
 }
 
 export default React.memo(FileList);
