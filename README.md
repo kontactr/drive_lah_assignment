@@ -60,4 +60,5 @@ You can visit [here](https://yg-drivelah-assignment.netlify.app/)
 
 ### `Articles For References`
 
-- [Filesystem](https://web.dev/file-system-access/) - for how to access filesystems
+- [Filesystem](https://web.dev/file-system-access/) - For how to access filesystems
+- [FileSystem Limited Access](https://caniuse.com/?search=showSaveFilePicker) - Filesystem access API has limited access.
