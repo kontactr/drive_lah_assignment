@@ -13,12 +13,12 @@ const SideBar = (props) => {
         <div className="app-logo-container">
             <UserOutlined className="app-logo" />
         </div>
-        <div className="sider-menu-item">
+        <div className="sider-menu-item" onClick={onLogout}>
             <span className="sider-menu-item-logo-container" >
                 <LogoutOutlined className="sider-menu-item-logo" />
             </span>
 
-            {!collapsed && <span className="sider-menu-item-text" onClick={onLogout}>
+            {!collapsed && <span className="sider-menu-item-text" >
                 Logout
             </span>}
         </div>

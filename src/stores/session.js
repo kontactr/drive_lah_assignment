@@ -5,7 +5,7 @@ import {
 import { readFile, writeFile, } from 'utils/FileSystemHelpers'
 import { convertToCSV, convertToArray } from 'utils/CSVHelpers'
 import { getValues, setValue } from 'utils/IdbHelpers'
-import { makeAutoObservable, toJS } from 'mobx'
+import { makeAutoObservable } from 'mobx'
 
 export default class SessionStore {
     dirHandler = undefined;
@@ -46,36 +46,53 @@ export default class SessionStore {
         this.retrivePersistHandlers()
     }
 
-    setDirectoryHandler = (dirHandler, persist = true) => {
+    setDirectoryHandler = async (dirHandler, persist = true) => {
         this.dirHandler = dirHandler;
         if (persist) {
-            setValue(DEFAULT_IDB_KEY_FOR_DIRECTORY_HANDLER, dirHandler)
+            const result = await setValue(DEFAULT_IDB_KEY_FOR_DIRECTORY_HANDLER, dirHandler)
+            return result
         }
+        return true;
+
     }
 
     configureDatabase = async (fileHandler) => {
         const contents = await readFile(fileHandler);
-
         if (contents && contents.length) {
             const jsData = convertToArray(contents)
-            this.setDatabase(jsData)
+            if (jsData !== undefined) {
+                this.setDatabase(jsData)
+                return true
+            }
+            return false
+
         } else {
             this.setDatabase([])
+            return contents !== undefined;
+
+
         }
     }
 
     writeToFile = async (usersDatabase) => {
         const contents = convertToCSV(usersDatabase);
-        await writeFile(this.fileHandler, contents)
-        return contents;
+        const result = await writeFile(this.fileHandler, contents)
+        if (result) {
+            return contents;
+        }
+        return undefined;
     }
 
     setFileHandler = async (fileHandler, persist = true) => {
-        await this.configureDatabase(fileHandler);
-        this.fileHandler = fileHandler;
-        if (persist) {
-            setValue(DEFAULT_IDB_KEY_FOR_FILE_HANDLER, fileHandler)
+        const result = await this.configureDatabase(fileHandler);
+        if (result) {
+            this.fileHandler = fileHandler;
+            if (persist) {
+                setValue(DEFAULT_IDB_KEY_FOR_FILE_HANDLER, fileHandler)
+            }
         }
+        return result
+
     }
 
     setDatabase = (databse = []) => {
@@ -90,12 +107,11 @@ export default class SessionStore {
         } else {
             this.currentUser = { ...this.currentUser, ...user }
         }
-        console.log(toJS(this.currentUser), 9333)
     }
 
     updateUser = async (phone, updateData) => {
         if (!phone) {
-            return
+            return false
         }
         const newDatabase = this.database.map((user) => {
             const userPhone = user.phone;
@@ -104,8 +120,11 @@ export default class SessionStore {
             }
             return user;
         })
-        await this.writeToFile(newDatabase);
-        this.database = newDatabase;
+        const result = await this.writeToFile(newDatabase);
+        if (result !== undefined) {
+            this.database = newDatabase;
+        }
+        return result;
     }
 
     resetUser = () => {
@@ -113,7 +132,6 @@ export default class SessionStore {
     }
 
     checkIfUserExist = (phone) => {
-
         phone = phone.trim();
         return this.database.find((user) => {
             const userPhone = user.phone.trim();
@@ -124,9 +142,12 @@ export default class SessionStore {
     addNewUser = async ({ phone, name = "" }) => {
         const newUser = { phone, name }
         const newDatabase = [...this.database, newUser]
-        await this.writeToFile(newDatabase);
-        this.setDatabase(newDatabase);
-        return newUser;
+        const result = await this.writeToFile(newDatabase);
+        if (result !== undefined) {
+            this.setDatabase(newDatabase);
+            return newUser;
+        }
+        return result;
     }
 
 }

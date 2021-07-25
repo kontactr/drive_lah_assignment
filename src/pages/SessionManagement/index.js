@@ -12,9 +12,12 @@ import {
     getFileNameWithExtension,
 
 } from 'utils/FileSystemHelpers'
+import {
+    generateNotification
+} from 'utils/NotificationHelpers'
 import './SessionManagement.css'
 import { withRouter } from 'react-router'
-import { DEFAULT_FILE_EXTENSION } from 'config/constants'
+import { DEFAULT_FILE_EXTENSION, NOTIFICATION_CONTENT, NOTIFICATION_TITLES, NOTIFICATION_TYPES, VALIDATION_MESSAGES } from 'config/constants'
 
 class SessionManagement extends React.Component {
 
@@ -42,7 +45,7 @@ class SessionManagement extends React.Component {
             return name === fileName
         })
         if (isFileAlreadyPresent) {
-            return "File is already present!"
+            return VALIDATION_MESSAGES.FILE_ALREADY_PRESENT
         } else {
             return ""
         }
@@ -54,26 +57,37 @@ class SessionManagement extends React.Component {
         const { setDirectoryHandler } = sessionStore
 
         const files = await getFilesWithinDirectory(dirHandler);
-        setDirectoryHandler(dirHandler);
-        this.setState({ sessionFiles: files });
-
+        if (files !== undefined) {
+            setDirectoryHandler(dirHandler);
+            this.setState({ sessionFiles: files });
+        } else {
+            generateNotification({
+                type: NOTIFICATION_TYPES.ERROR,
+                title: NOTIFICATION_TITLES.FILE_READ_FROM_DIRECTORY,
+                content: NOTIFICATION_CONTENT.FILE_READ_FROM_DIRECTORY
+            })
+        }
+        return Boolean(files)
     }
 
     onSelectWorkingDirectory = async () => {
-        try {
-            const dirHandler = await getDirectoryHandler();
-            if (dirHandler) {
-                this.setDirectoryFiles(dirHandler)
-            }
-        } catch (err) {
 
+        const dirHandler = await getDirectoryHandler();
+        if (dirHandler !== null) {
+            this.setDirectoryFiles(dirHandler)
+        } else {
+            generateNotification({
+                type: NOTIFICATION_TYPES.ERROR,
+                title: NOTIFICATION_TITLES.DIRECTORY_ACCESS,
+                content: NOTIFICATION_CONTENT.NOT_ABLE_TO_ACCESS_DIRECTORY
+            })
         }
+
     }
 
     gotoLoginPage = () => {
         const { history, routes } = this.props
         const route = routes.login.generateRoute()
-        console.log(7444)
         history.push(route);
     }
 
@@ -81,14 +95,22 @@ class SessionManagement extends React.Component {
 
         const { sessionStore } = this.props
         const { setFileHandler } = sessionStore;
-        await setFileHandler(fileHandler);
-        this.gotoLoginPage();
+        const result = await setFileHandler(fileHandler);
+        if (result) {
+            this.gotoLoginPage();
+        } else {
+            generateNotification({
+                type: NOTIFICATION_TYPES.ERROR,
+                title: NOTIFICATION_TITLES.FILE_ACCESS,
+                content: NOTIFICATION_CONTENT.NOT_ABLE_TO_ACCESS_FILE
+            })
+        }
+
 
     }
 
     addNewSessionfile = (fileHandler) => {
         this.setState((state) => {
-            // fileHandler["uniqueId"] = generateId()
             return {
                 sessionFiles: [fileHandler, ...state.sessionFiles]
             }
@@ -113,14 +135,24 @@ class SessionManagement extends React.Component {
     onNewSessionFileAdd = async (formValues) => {
         const { sessionStore } = this.props
         const { dirHandler, setFileHandler } = sessionStore
-        const { fileName, rememberAsCurrentSession } = formValues
+        let { fileName, rememberAsCurrentSession } = formValues
+        fileName = fileName.trim()
         const fileHandler = await createFileWithInDirectory(dirHandler, fileName)
-        if (!rememberAsCurrentSession) {
-            this.addNewSessionfile(fileHandler);
+        if (fileHandler === undefined) {
+            generateNotification({
+                type: NOTIFICATION_TYPES.ERROR,
+                title: NOTIFICATION_TITLES.FILE_CREATE,
+                content: NOTIFICATION_CONTENT.NOT_ABLE_TO_CREATE_FILE
+            })
+
         } else {
-            this.addNewSessionfile(fileHandler);
-            setFileHandler(fileHandler)
-            this.gotoLoginPage();
+            if (!rememberAsCurrentSession) {
+                this.addNewSessionfile(fileHandler);
+            } else {
+                this.addNewSessionfile(fileHandler);
+                setFileHandler(fileHandler)
+                this.gotoLoginPage();
+            }
         }
     }
 
@@ -137,6 +169,12 @@ class SessionManagement extends React.Component {
                 const result = await deleteFileWithInDirectory(dirHandler, file.name)
                 if (result) {
                     this.deleteSessionfile(file);
+                } else {
+                    generateNotification({
+                        type: NOTIFICATION_TYPES.ERROR,
+                        title: NOTIFICATION_TITLES.FILE_DELETE,
+                        content: NOTIFICATION_CONTENT.NOT_ABLE_TO_DELETE_FILE
+                    })
                 }
                 return result;
             }
@@ -152,13 +190,20 @@ class SessionManagement extends React.Component {
 
         const response = await retrivePersistHandlers()
         if (response) {
-            await setFileHandler(response.fileHandler)
-            await this.setDirectoryFiles(response.dirHandler)
-            await setDirectoryHandler(response.dirHandler)
+            let result;
+            result = await setFileHandler(response.fileHandler)
+            result = result && await this.setDirectoryFiles(response.dirHandler)
+            result = result && await setDirectoryHandler(response.dirHandler)
+            if (result) {
+                this.gotoLoginPage();
+            } else {
+                generateNotification({
+                    type: NOTIFICATION_TYPES.ERROR,
+                    title: NOTIFICATION_TITLES.LOAD_PREVIOUS_VERSION,
+                    content: NOTIFICATION_CONTENT.NOT_ABLE_TO_LOAD_PREVIOUS_VERSION
+                })
+            }
 
-
-            this.gotoLoginPage();
-        } else {
         }
     }
 

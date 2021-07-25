@@ -7,6 +7,8 @@ import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
 import './Login.css'
 import { inject, observer } from 'mobx-react'
+import { generateNotification } from 'utils/NotificationHelpers'
+import { NOTIFICATION_CONTENT, NOTIFICATION_TITLES, NOTIFICATION_TYPES, PLACEHOLDERS, VALIDATION_MESSAGES } from 'config/constants'
 
 
 const config = {
@@ -22,7 +24,7 @@ const Login = (props) => {
 
     const { sessionStore } = props
     const { fileHandler } = sessionStore
-    const sessionName = fileHandler ? fileHandler.name : "aaa"
+    const sessionName = fileHandler ? fileHandler.name : ""
 
     const [generatedOtp, setGeneratedOtp] = useState(undefined)
     const [stage, setStage] = useState(STAGES.INIT)
@@ -65,15 +67,23 @@ const Login = (props) => {
     const onInitStagecomplete = (values) => {
         const { phone } = values
         setStage(STAGES.OTP)
-        setPhone(phone)
+        setPhone(phone.trim())
         onGetOtpClick();
     }
 
-    const onOtpStageComplete = async (values) => {
+    const onOtpStageComplete = async () => {
         const { checkIfUserExist, setCurrentUser, addNewUser } = sessionStore
         let user = checkIfUserExist(phone);
         if (!Boolean(user)) {
             user = await addNewUser({ phone, name: "" })
+            if (user === undefined) {
+                generateNotification({
+                    type: NOTIFICATION_TYPES.ERROR,
+                    title: NOTIFICATION_TITLES.USER_CREATE,
+                    content: NOTIFICATION_CONTENT.NOT_ABLE_TO_CREATE_USER
+                })
+                return
+            }
         }
         setCurrentUser(user);
         gotoDashboard();
@@ -111,7 +121,7 @@ const Login = (props) => {
                         {(STAGES.INIT === stage) && (<Form.Item
                             label="Phone Number"
                             name="phone"
-                            rules={[{ required: true, message: 'Please input your phonenumber!', whitespace: true, }]}
+                            rules={[{ required: true, message: VALIDATION_MESSAGES.PHONE_NUMBER_REQUIRE, whitespace: true, }]}
                         >
                             <PhoneInput
                                 country={config.DEFAULT_COUNTRY}
@@ -127,17 +137,17 @@ const Login = (props) => {
                                     label="OTP"
                                     name="otp"
                                     validateFirst
-                                    rules={[{ required: true, message: 'Please input your otp!', whitespace: true, }, {
+                                    rules={[{ required: true, message: VALIDATION_MESSAGES.OTP_REQUIRE, whitespace: true, }, {
                                         validateTrigger: "onSubmit",
                                         validator: (_, value) => {
                                             if (generatedOtp && value === generatedOtp) {
                                                 return Promise.resolve()
                                             }
-                                            return Promise.reject("Please enter valid otp!")
+                                            return Promise.reject(VALIDATION_MESSAGES.OTP_VALID)
                                         }
                                     }]}
                                 >
-                                    <Input.Password className="login-input-element" />
+                                    <Input.Password placeholder={PLACEHOLDERS.OTP} className="login-input-element" />
                                 </Form.Item>
 
                                 <Button type="default" className="regenerate-otp-button" onClick={onGetOtpClick}>

@@ -1,7 +1,7 @@
 import { Modal, Button, Form, Input, Checkbox, Tooltip } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import './AddFileModal.css'
-import { DEFAULT_FILE_EXTENSION, DEFAULT_FILE_PATTERN } from 'config/constants'
+import { DEFAULT_FILE_EXTENSION, DEFAULT_FILE_PATTERN, VALIDATION_MESSAGES } from 'config/constants'
 
 const config = {
     title: "Create Session File",
@@ -33,9 +33,9 @@ const AddFileModal = (props) => {
                     hasFeedback
                     validateFirst
                     rules={[
-                        { required: true, message: 'Please input file name!', whitespace: true },
+                        { required: true, message: VALIDATION_MESSAGES.FILE_NAME_REQUIRE, whitespace: true },
                         {
-                            pattern: DEFAULT_FILE_PATTERN, message: '[0-9a-zA-Z_-. ]!'
+                            pattern: DEFAULT_FILE_PATTERN, message: VALIDATION_MESSAGES.FILE_PATTERN_VALID
                         }, {
                             validateTrigger: "onSubmit",
                             validator: (_, fileName) => {

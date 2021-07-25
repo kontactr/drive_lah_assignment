@@ -1,5 +1,5 @@
 import { Form, Input, Button, Divider, Card } from 'antd'
-import { DEAFULT_NAME_PATTERN } from 'config/constants'
+import { DEAFULT_NAME_PATTERN, PLACEHOLDERS, VALIDATION_MESSAGES } from 'config/constants'
 import './AddName.css'
 
 const AddName = (props) => {
@@ -26,11 +26,11 @@ const AddName = (props) => {
                         name="userName"
                         hasFeedback
                         validateFirst
-                        rules={[{ required: true, message: 'Please input your name!', whitespace: true }, {
-                            pattern: DEAFULT_NAME_PATTERN, message: "Only [a-zA-Z0-9 ._$@] characters are allowed"
+                        rules={[{ required: true, message: VALIDATION_MESSAGES.USER_REQUIRE, whitespace: true }, {
+                            pattern: DEAFULT_NAME_PATTERN, message: VALIDATION_MESSAGES.USER_PATTERN_VALID
                         }]}
                     >
-                        <Input placeholder="please input your name!" />
+                        <Input placeholder={PLACEHOLDERS.USER_NAME} />
                     </Form.Item>
 
                     <div className="add-name-form-buttons-container">
