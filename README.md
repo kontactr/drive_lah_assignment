@@ -5,6 +5,10 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 In this project users can login using their phone number set their names. The main focus of this project to persist data using filesystems. In this project users can select various files as their session database and ,then, they can use functionalities.
 
+# Note
+
+This project uses new APIs for filesystems, please use chrome browser for better experience. for more information, please visit [articles & references section](`Articles-For-References).
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -36,6 +40,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 This project is hosted on Netlify's environment with the build pipeline of the main branch. \
 You can visit [here](https://yg-drivelah-assignment.netlify.app/)
 
+# How To & References
+
 ### `How To`
 
 - Users have to first select directory which works as a working directory for them.
@@ -62,3 +68,7 @@ You can visit [here](https://yg-drivelah-assignment.netlify.app/)
 
 - [Filesystem](https://web.dev/file-system-access/) - For how to access filesystems
 - [FileSystem Limited Access](https://caniuse.com/?search=showSaveFilePicker) - Filesystem access API has limited access.
+
+### `Readme Editor`
+
+- [Markdown Editor](https://jbt.github.io/markdown-editor/) - This readme is built using this editor.

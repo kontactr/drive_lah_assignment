@@ -1,0 +1,19 @@
+.route-laoder-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-icon {
+  margin: auto;
+  font-size: 150px;
+}
+
+.ant-icon-loading-text {
+  margin-top: 20px;
+  font-size: 25px;
+  letter-spacing: 2px;
+}
