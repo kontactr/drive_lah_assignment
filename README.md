@@ -7,7 +7,7 @@ In this project users can login using their phone number set their names. The ma
 
 # Note
 
-This project uses new APIs for filesystems, please use chrome browser for better experience. for more information, please visit [articles & references section](`Articles-For-References).
+This project uses new APIs for filesystems, please use chrome browser for better experience. for more information, please visit [articles & references section](#articles-for-references).
 
 ## Available Scripts
 
